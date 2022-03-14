@@ -249,7 +249,7 @@ class _PhoneFieldState extends State<PhoneField> {
         maintainState: true,
         visible: visible,
         child: CountryCodeChip(
-          key: const ValueKey('country-code-chip'),
+          key: visible ? const ValueKey('country-code-chip') : const ValueKey('country-code-chip-hidden'),
           country: Country(controller.isoCode ?? controller.defaultIsoCode),
           showFlag: true,
           textStyle: widget.countryCodeStyle ??
