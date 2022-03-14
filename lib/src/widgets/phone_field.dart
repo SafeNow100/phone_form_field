@@ -148,7 +148,6 @@ class _PhoneFieldState extends State<PhoneField> {
     if (selected != null) {
       controller.isoCode = selected.isoCode;
     }
-    controller.isoCode = controller.defaultIsoCode;
     controller.focusNode.requestFocus();
     SystemChannels.textInput.invokeMethod('TextInput.show');
   }
