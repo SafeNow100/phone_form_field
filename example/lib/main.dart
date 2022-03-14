@@ -76,10 +76,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: [
-        ...GlobalMaterialLocalizations.delegates,
-        PhoneFieldLocalization.delegate
-      ],
+      localizationsDelegates: [...GlobalMaterialLocalizations.delegates, PhoneFieldLocalization.delegate],
       supportedLocales: [
         const Locale('en', ''),
         const Locale('es', ''),
@@ -110,7 +107,7 @@ class _PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
   bool mobileOnly = true;
   bool shouldFormat = true;
   bool required = false;
-  bool withLabel = true;
+  bool withLabel = false;
   CountrySelectorNavigator selectorNavigator = const BottomSheetNavigator();
   final formKey = GlobalKey<FormState>();
   final phoneKey = GlobalKey<FormFieldState<PhoneNumber>>();
@@ -194,8 +191,7 @@ class _PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
                               ),
                               DropdownMenuItem(
                                 child: Text('Draggable modal sheet'),
-                                value:
-                                    const DraggableModalBottomSheetNavigator(),
+                                value: const DraggableModalBottomSheetNavigator(),
                               ),
                               DropdownMenuItem(
                                 child: Text('Modal sheet'),
@@ -232,13 +228,10 @@ class _PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
                     Text(controller.value.toString()),
                     Text('is valid mobile number '
                         '${controller.value?.validate(type: PhoneNumberType.mobile) ?? 'false'}'),
-                    Text(
-                        'is valid fixed line number ${controller.value?.validate(type: PhoneNumberType.fixedLine) ?? 'false'}'),
+                    Text('is valid fixed line number ${controller.value?.validate(type: PhoneNumberType.fixedLine) ?? 'false'}'),
                     SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: controller.value == null
-                          ? null
-                          : () => controller.reset(),
+                      onPressed: controller.value == null ? null : () => controller.reset(),
                       child: Text('reset'),
                     ),
                     SizedBox(height: 12),
@@ -248,8 +241,7 @@ class _PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
                     ),
                     SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: () =>
-                          controller.value = PhoneNumber.fromIsoCode(
+                      onPressed: () => controller.value = PhoneNumber.fromIsoCode(
                         'fr',
                         '699999999',
                       ),

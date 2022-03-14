@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,6 @@ import 'package:phone_form_field/src/widgets/phone_field.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import 'country_picker/country_selector_navigator.dart';
-import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 /// Phone input extending form field.
 ///
@@ -103,8 +103,7 @@ class PhoneFormField extends FormField<PhoneNumber> {
     CountrySelectorNavigator selectorNavigator = const BottomSheetNavigator(),
     Function(PhoneNumber?)? onSaved,
     this.defaultCountry = 'US',
-    InputDecoration decoration =
-        const InputDecoration(border: UnderlineInputBorder()),
+    InputDecoration decoration = const InputDecoration(border: UnderlineInputBorder()),
     AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     PhoneNumber? initialValue,
     double flagSize = 16,
@@ -113,6 +112,7 @@ class PhoneFormField extends FormField<PhoneNumber> {
     TextInputType keyboardType = TextInputType.phone,
     TextInputAction? textInputAction,
     TextStyle? style,
+    TextStyle? countryCodeStyle,
     StrutStyle? strutStyle,
     TextAlign textAlign = TextAlign.start,
     TextAlignVertical? textAlignVertical,
@@ -155,8 +155,7 @@ class PhoneFormField extends FormField<PhoneNumber> {
           key: key,
           autovalidateMode: autovalidateMode,
           enabled: enabled,
-          initialValue:
-              controller != null ? controller.initialValue : initialValue,
+          initialValue: controller != null ? controller.initialValue : initialValue,
           onSaved: onSaved,
           validator: validator ?? PhoneValidator.valid(),
           restorationId: restorationId,
@@ -175,6 +174,7 @@ class PhoneFormField extends FormField<PhoneNumber> {
               keyboardType: keyboardType,
               textInputAction: textInputAction,
               style: style,
+              countryCodeStyle: countryCodeStyle,
               strutStyle: strutStyle,
               textAlign: textAlign,
               textAlignVertical: textAlignVertical,
@@ -235,8 +235,7 @@ class _PhoneFormFieldState extends FormFieldState<PhoneNumber> {
     _controller.addListener(_onControllerChange);
     _childController.addListener(() => _onChildControllerChange());
     // to expose text selection of national number
-    _selectionSubscription = _controller.selectionRequest$
-        .listen((event) => _childController.selectNationalNumber());
+    _selectionSubscription = _controller.selectionRequest$.listen((event) => _childController.selectNationalNumber());
   }
 
   @override
@@ -277,8 +276,7 @@ class _PhoneFormFieldState extends FormFieldState<PhoneNumber> {
   /// when the base controller changes (when the user manually input something)
   /// then we need to update the local controller's value.
   void _onChildControllerChange() {
-    if (_childController.national == _controller.value?.nsn &&
-        _childController.isoCode == _controller.value?.isoCode) {
+    if (_childController.national == _controller.value?.nsn && _childController.isoCode == _controller.value?.isoCode) {
       return;
     }
     if (_childController.national == null && _childController.isoCode == null) {
@@ -292,8 +290,7 @@ class _PhoneFormFieldState extends FormFieldState<PhoneNumber> {
     // we parse it accordingly.
     // we assume it's a whole phone number if it starts with +
     final childNsn = _childController.national;
-    if (childNsn != null &&
-        childNsn.startsWith(RegExp('[${Constants.PLUS}]'))) {
+    if (childNsn != null && childNsn.startsWith(RegExp('[${Constants.PLUS}]'))) {
       // if starts with + then we parse the whole number
       // to figure out the country code
       final international = childNsn;

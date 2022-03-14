@@ -1,3 +1,5 @@
+import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phone_form_field/src/constants/constants.dart';
@@ -5,7 +7,6 @@ import 'package:phone_form_field/src/models/phone_field_controller.dart';
 import 'package:phone_form_field/src/widgets/measure_initial_size.dart';
 
 import '../../phone_form_field.dart';
-import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 /// Phone field
 ///
@@ -24,6 +25,7 @@ class PhoneField extends StatefulWidget {
   final TextInputType keyboardType;
   final TextInputAction? textInputAction;
   final TextStyle? style;
+  final TextStyle? countryCodeStyle;
   final StrutStyle? strutStyle;
   final TextAlign textAlign;
   final TextAlignVertical? textAlignVertical;
@@ -72,6 +74,7 @@ class PhoneField extends StatefulWidget {
     required this.keyboardType,
     required this.textInputAction,
     required this.style,
+    required this.countryCodeStyle,
     required this.strutStyle,
     required this.textAlign,
     required this.textAlignVertical,
@@ -142,6 +145,7 @@ class _PhoneFieldState extends State<PhoneField> {
     if (selected != null) {
       controller.isoCode = selected.isoCode;
     }
+    controller.isoCode = controller.defaultIsoCode;
     controller.focusNode.requestFocus();
     SystemChannels.textInput.invokeMethod('TextInput.show');
   }
@@ -157,8 +161,7 @@ class _PhoneFieldState extends State<PhoneField> {
           onSizeFound: (size) => setState(() => _size = size),
           child: _textField(),
         ),
-        if (controller.focusNode.hasFocus || controller.national != null)
-          _inkWellOverlay(),
+        if (controller.focusNode.hasFocus || controller.national != null) _inkWellOverlay(),
       ],
     );
   }
@@ -169,8 +172,7 @@ class _PhoneFieldState extends State<PhoneField> {
       controller: controller.nationalController,
       enabled: widget.enabled,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(
-            '[${Constants.PLUS}${Constants.DIGITS}${Constants.PUNCTUATION}]')),
+        FilteringTextInputFormatter.allow(RegExp('[${Constants.PLUS}${Constants.DIGITS}${Constants.PUNCTUATION}]')),
       ],
       decoration: widget.decoration.copyWith(
         errorText: widget.errorText,
@@ -228,9 +230,7 @@ class _PhoneFieldState extends State<PhoneField> {
           // outline border has padding on the left
           // but only when prefixIcon is used
           // so we need to make it a 12 bigger
-          padding: _isOutlineBorder
-              ? const EdgeInsets.only(left: 12)
-              : const EdgeInsets.all(0),
+          padding: _isOutlineBorder ? const EdgeInsets.only(left: 12) : const EdgeInsets.all(0),
           child: _getDialCodeChip(visible: false),
         ),
       ),
@@ -246,15 +246,14 @@ class _PhoneFieldState extends State<PhoneField> {
         maintainState: true,
         visible: visible,
         child: CountryCodeChip(
-          key: visible
-              ? const ValueKey('country-code-chip')
-              : const ValueKey('country-code-chip-hidden'),
+          key: const ValueKey('country-code-chip'),
           country: Country(controller.isoCode ?? controller.defaultIsoCode),
-          showFlag: widget.showFlagInInput,
-          textStyle: TextStyle(
-            fontSize: 16,
-            color: Theme.of(context).textTheme.caption?.color,
-          ),
+          showFlag: true,
+          textStyle: widget.countryCodeStyle ??
+              TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).textTheme.caption?.color,
+              ),
           flagSize: widget.flagSize,
         ),
       ),
