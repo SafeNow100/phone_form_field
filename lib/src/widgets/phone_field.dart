@@ -26,6 +26,7 @@ class PhoneField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final TextStyle? style;
   final TextStyle? countryCodeStyle;
+  final EdgeInsets? countryCodePadding;
   final StrutStyle? strutStyle;
   final TextAlign textAlign;
   final TextAlignVertical? textAlignVertical;
@@ -53,6 +54,7 @@ class PhoneField extends StatefulWidget {
   final EdgeInsets scrollPadding;
   final bool enableInteractiveSelection;
   final TextSelectionControls? selectionControls;
+
   bool get selectionEnabled => enableInteractiveSelection;
   final MouseCursor? mouseCursor;
   final ScrollPhysics? scrollPhysics;
@@ -75,6 +77,7 @@ class PhoneField extends StatefulWidget {
     required this.textInputAction,
     required this.style,
     required this.countryCodeStyle,
+    required this.countryCodePadding,
     required this.strutStyle,
     required this.textAlign,
     required this.textAlignVertical,
@@ -239,7 +242,7 @@ class _PhoneFieldState extends State<PhoneField> {
 
   Widget _getDialCodeChip({bool visible = true}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      padding: widget.countryCodePadding ?? EdgeInsets.fromLTRB(8, 0, 8, 0),
       child: Visibility(
         maintainSize: true,
         maintainAnimation: true,
