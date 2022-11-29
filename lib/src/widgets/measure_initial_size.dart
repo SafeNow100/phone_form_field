@@ -15,7 +15,7 @@ class MeasureInitialSizeRenderObject extends RenderProxyBox {
     super.performLayout();
     if (isInitialLayout) {
       isInitialLayout = false;
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         onSizeFound(child?.size ?? Size(0, 0));
       });
     }
