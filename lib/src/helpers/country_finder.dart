@@ -30,7 +30,7 @@ class CountryFinder {
     final isNum = asInt != null;
     if (isNum) {
       // toString to remove any + in front if its an int
-      return _filterByDialCode(asInt!.toString());
+      return _filterByDialCode(asInt.toString());
     } else {
       return _filterByName(txt, context);
     }

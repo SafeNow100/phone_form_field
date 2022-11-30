@@ -1,15 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:phone_form_field/l10n/generated/phone_field_localization.dart';
-import 'package:phone_form_field/src/helpers/country_translator.dart';
 
+import '../../../l10n/generated/phone_field_localization.dart';
 import '../../helpers/country_finder.dart';
+import '../../helpers/country_translator.dart';
 import '../../models/all_countries.dart';
 import '../../models/country.dart';
 import 'country_list.dart';
 import 'search_box.dart';
-
-const _emptyFavCountriesArray = <String>[];
 
 class CountrySelector extends StatefulWidget {
   /// List of countries to display in the selector
@@ -33,6 +31,9 @@ class CountrySelector extends StatefulWidget {
   /// list divider between favorites and others defaults countries
   final List<String> favoriteCountries;
 
+  /// Countries that should not be displayed.
+  final List<String> disabledCountries;
+
   /// Whether to add a list divider between favorites & defaults
   /// countries.
   final bool addFavoritesSeparator;
@@ -55,11 +56,11 @@ class CountrySelector extends StatefulWidget {
     this.addFavoritesSeparator = true,
     this.showCountryCode = false,
     this.noResultMessage,
-    List<String>? favoriteCountries,
+    this.favoriteCountries = const [],
+    this.disabledCountries = const [],
     List<Country>? countries,
     this.searchAutofocus = kIsWeb,
   })  : countries = countries ?? allCountries,
-        favoriteCountries = favoriteCountries ?? _emptyFavCountriesArray,
         super(key: key);
 
   @override
@@ -78,9 +79,8 @@ class _CountrySelectorState extends State<CountrySelector> {
     // this need to be done in didChangeDependencies (not in initState)
     // as context is not available in initState and context is required
     // to get the localized country name
-    _filteredCountries = widget.sortCountries
-        ? _sortCountries(widget.countries)
-        : widget.countries;
+    _filteredCountries = widget.sortCountries ? _sortCountries(widget.countries) : widget.countries;
+    _filteredCountries.removeWhere((country) => widget.disabledCountries.contains(country.isoCode));
 
     _countryFinder = CountryFinder(_filteredCountries);
     _handleFavoritesCountries();
@@ -90,14 +90,12 @@ class _CountrySelectorState extends State<CountrySelector> {
     // perform a copy so we don't modify original value
     return countriesList
       ..sort((Country a, Country b) {
-        return CountryTranslator.localisedName(context, a)
-            .compareTo(CountryTranslator.localisedName(context, b));
+        return CountryTranslator.localisedName(context, a).compareTo(CountryTranslator.localisedName(context, b));
       });
   }
 
   _handleFavoritesCountries() {
-    final hasFavoritesCountry =
-        _filteredCountries.isNotEmpty && widget.favoriteCountries.isNotEmpty;
+    final hasFavoritesCountry = _filteredCountries.isNotEmpty && widget.favoriteCountries.isNotEmpty;
 
     // hold index where the separator must be displayed
     _favoritesSeparatorIndex = null;
@@ -151,9 +149,7 @@ class _CountrySelectorState extends State<CountrySelector> {
               : Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
-                    widget.noResultMessage ??
-                        PhoneFieldLocalization.of(context)?.noResultMessage ??
-                        'No result found',
+                    widget.noResultMessage ?? PhoneFieldLocalization.of(context)?.noResultMessage ?? 'No result found',
                     key: const ValueKey('no-result'),
                   ),
                 ),
