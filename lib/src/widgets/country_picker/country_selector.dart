@@ -118,7 +118,7 @@ class _CountrySelectorState extends State<CountrySelector> {
 
   _onSearch(String txt) {
     setState(() {
-      _filteredCountries = _countryFinder.filter(txt, context);
+      _filteredCountries = _countryFinder.filter(txt.trimLeft(), context);
       _handleFavoritesCountries();
     });
   }
