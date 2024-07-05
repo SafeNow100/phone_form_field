@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../../models/all_countries.dart';
 import '../../models/country.dart';
@@ -7,13 +8,13 @@ import 'country_selector.dart';
 
 abstract class CountrySelectorNavigator {
   final List<Country>? countries;
-  final List<String>? favorites;
+  final List<IsoCode>? favorites;
   final bool addSeparator;
   final bool showCountryCode;
   final bool sortCountries;
   final String? noResultMessage;
   final bool searchAutofocus;
-  final List<String> disabledCountryCodes;
+  final List<IsoCode> disabledCountryCodes;
 
   const CountrySelectorNavigator({
     this.countries,
@@ -28,10 +29,10 @@ abstract class CountrySelectorNavigator {
 
   Future<Country?> navigate(BuildContext context);
 
-  List<String> get _disabledCountryIsoCodes {
-    var isoCodes = <String>[];
+  List<IsoCode> get _disabledCountryIsoCodes {
+    var isoCodes = <IsoCode>[];
     for (final country in allCountries) {
-      if (disabledCountryCodes.contains(country.countryCode)) {
+      if (disabledCountryCodes.contains(country.isoCode)) {
         isoCodes.add(country.isoCode);
       }
     }
@@ -59,7 +60,7 @@ abstract class CountrySelectorNavigator {
 class DialogNavigator extends CountrySelectorNavigator {
   const DialogNavigator({
     List<Country>? countries,
-    List<String>? favorites,
+    List<IsoCode>? favorites,
     bool addSeparator = true,
     bool showCountryCode = true,
     bool sortCountries = false,
@@ -91,7 +92,7 @@ class DialogNavigator extends CountrySelectorNavigator {
 class BottomSheetNavigator extends CountrySelectorNavigator {
   const BottomSheetNavigator({
     List<Country>? countries,
-    List<String>? favorites,
+    List<IsoCode>? favorites,
     bool addSeparator = true,
     bool showCountryCode = true,
     bool sortCountries = false,
@@ -129,7 +130,7 @@ class ModalBottomSheetNavigator extends CountrySelectorNavigator {
   const ModalBottomSheetNavigator({
     this.height,
     List<Country>? countries,
-    List<String>? favorites,
+    List<IsoCode>? favorites,
     bool addSeparator = true,
     bool showCountryCode = true,
     bool sortCountries = false,
@@ -172,13 +173,13 @@ class DraggableModalBottomSheetNavigator extends CountrySelectorNavigator {
     this.maxChildSize = 0.85,
     this.borderRadius,
     List<Country>? countries,
-    List<String>? favorites,
+    List<IsoCode>? favorites,
     bool addSeparator = true,
     bool showCountryCode = true,
     bool sortCountries = false,
     String? noResultMessage,
     bool searchAutofocus = kIsWeb,
-    List<String> disabledCountryCodes = const [],
+    List<IsoCode> disabledCountryCodes = const [],
   }) : super(
           countries: countries,
           disabledCountryCodes: disabledCountryCodes,

@@ -37,8 +37,7 @@ class CountryFinder {
   }
 
   List<Country> _filterByDialCode(String dialCode) {
-    final getSortPoint =
-        (Country c) => c.countryCode.length == dialCode.length ? 1 : 0;
+    final getSortPoint = (Country c) => c.countryCode.length == dialCode.length ? 1 : 0;
 
     return countries.where((c) => c.countryCode.contains(dialCode)).toList()
       // puts the closest match at the top
@@ -50,23 +49,19 @@ class CountryFinder {
     // since we keep countries that contain the searched text,
     // we need to put the countries that start with that text in front.
     final getSortPoint = (String name, String isoCode) {
-      bool isStartOfString = name.startsWith(lowerCaseTxt) ||
-          isoCode.toLowerCase().startsWith(lowerCaseTxt);
+      bool isStartOfString = name.startsWith(lowerCaseTxt) || isoCode.toLowerCase().startsWith(lowerCaseTxt);
       return isStartOfString ? 1 : 0;
     };
 
     final compareCountries = (Country a, Country b) {
       final aName = CountryTranslator.localisedName(context, a).toLowerCase();
       final bName = CountryTranslator.localisedName(context, b).toLowerCase();
-      final sortPoint =
-          getSortPoint(bName, b.isoCode) - getSortPoint(aName, a.isoCode);
+      final sortPoint = getSortPoint(bName, b.isoCode.name) - getSortPoint(aName, a.isoCode.name);
       // sort alphabetically when comparison with search term get same result
       return sortPoint == 0 ? aName.compareTo(bName) : sortPoint;
     };
 
-    final match = (Country c) => CountryTranslator.localisedName(context, c)
-        .toLowerCase()
-        .contains(lowerCaseTxt);
+    final match = (Country c) => CountryTranslator.localisedName(context, c).toLowerCase().contains(lowerCaseTxt);
 
     return countries.where(match).toList()
       // puts the ones that begin by txt first

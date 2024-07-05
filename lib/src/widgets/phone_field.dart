@@ -254,7 +254,7 @@ class _PhoneFieldState extends State<PhoneField> {
           textStyle: widget.countryCodeStyle ??
               TextStyle(
                 fontSize: 16,
-                color: Theme.of(context).textTheme.caption?.color,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
           flagSize: widget.flagSize,
         ),

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 class PhoneFieldController extends ChangeNotifier {
-  late final ValueNotifier<String?> isoCodeController;
+  late final ValueNotifier<IsoCode?> isoCodeController;
   late final TextEditingController nationalController;
-  final String defaultIsoCode;
+  final IsoCode defaultIsoCode;
 
   /// focus node of the national number
   final FocusNode focusNode;
 
-  String? get isoCode => isoCodeController.value;
-  String? get national =>
-      nationalController.text.isEmpty ? null : nationalController.text;
-  set isoCode(String? isoCode) => isoCodeController.value = isoCode;
+  IsoCode? get isoCode => isoCodeController.value;
+  String? get national => nationalController.text.isEmpty ? null : nationalController.text;
+  set isoCode(IsoCode? isoCode) => isoCodeController.value = isoCode;
   set national(String? national) => nationalController.value = TextEditingValue(
         text: national ?? '',
         selection: TextSelection.fromPosition(
@@ -21,7 +21,7 @@ class PhoneFieldController extends ChangeNotifier {
 
   PhoneFieldController({
     required String? national,
-    required String? isoCode,
+    required IsoCode? isoCode,
     required this.defaultIsoCode,
     required this.focusNode,
   }) {
