@@ -1,8 +1,8 @@
-import 'package:dart_countries/dart_countries.dart' show isoCodes;
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import 'country.dart';
 
-final allCountries = isoCodes
+final allCountries = IsoCode.values
 
     /// those 3 (small) islands dont have flags in the circle_flags library
     /// it's unlikely anyone with a phone will be from there anyway

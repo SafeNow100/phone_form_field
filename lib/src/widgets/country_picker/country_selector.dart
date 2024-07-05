@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../../../l10n/generated/phone_field_localization.dart';
 import '../../helpers/country_finder.dart';
@@ -29,10 +30,10 @@ class CountrySelector extends StatefulWidget {
   /// Determine the countries to be displayed on top of the list
   /// Check [addFavoritesSeparator] property to enable/disable adding a
   /// list divider between favorites and others defaults countries
-  final List<String> favoriteCountries;
+  final List<IsoCode> favoriteCountries;
 
   /// Countries that should not be displayed.
-  final List<String> disabledCountries;
+  final List<IsoCode> disabledCountries;
 
   /// Whether to add a list divider between favorites & defaults
   /// countries.
@@ -104,13 +105,13 @@ class _CountrySelectorState extends State<CountrySelector> {
       return;
     }
 
-    widget.favoriteCountries.reversed.forEach((String isoCode) {
+    widget.favoriteCountries.reversed.forEach((IsoCode isoCode) {
       final int favIndex = _filteredCountries.indexWhere(
-        (Country country) => country.isoCode == isoCode.toUpperCase(),
+        (Country country) => country.isoCode == isoCode.name.toUpperCase(),
       );
       if (favIndex >= 0) {
         _filteredCountries.removeAt(favIndex);
-        _filteredCountries.insert(0, Country(isoCode.toUpperCase()));
+        _filteredCountries.insert(0, Country(isoCode));
         _favoritesSeparatorIndex = (_favoritesSeparatorIndex ?? 0) + 1;
       }
     });

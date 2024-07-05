@@ -259,13 +259,12 @@ class CountryTranslator {
     BuildContext context,
     Country country,
   ) {
-    String? name = getCountryNameForIsoCode(context, country.isoCode);
+    String? name = getCountryNameForIsoCode(context, country.isoCode.name);
     return name ?? country.name;
   }
 
   static String? getCountryNameForIsoCode(BuildContext ctx, String isoCode) {
-    final TranslateCountryFn? translateFn =
-        _countryNames[isoCode.toUpperCase()];
+    final TranslateCountryFn? translateFn = _countryNames[isoCode.toUpperCase()];
     return translateFn?.call(ctx);
   }
 }

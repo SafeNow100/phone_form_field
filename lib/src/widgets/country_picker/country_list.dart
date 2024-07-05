@@ -31,9 +31,7 @@ class CountryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int listLength = countries.isNotEmpty && separatorIndex != null
-        ? countries.length + 1
-        : countries.length;
+    final int listLength = countries.isNotEmpty && separatorIndex != null ? countries.length + 1 : countries.length;
 
     return ListView.builder(
       controller: scrollController,
@@ -46,15 +44,14 @@ class CountryList extends StatelessWidget {
 
         // when separator is reached, the country list index is shift
         // by 1 from the list builder index
-        final countryIndexDelta =
-            separatorIndex != null && index >= separatorIndex! ? 1 : 0;
+        final countryIndexDelta = separatorIndex != null && index >= separatorIndex! ? 1 : 0;
         Country country = countries[index - countryIndexDelta];
 
         return ListTile(
           key: ValueKey(country.isoCode),
           leading: CircleFlag(
-            country.isoCode,
-            size: showDialCode ? null : 40,
+            country.isoCode.name,
+            size: showDialCode ? 48 : 40,
           ),
           title: Align(
             alignment: AlignmentDirectional.centerStart,

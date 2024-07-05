@@ -1,5 +1,4 @@
-import 'package:dart_countries/dart_countries.dart';
-import 'package:phone_form_field/phone_form_field.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 typedef PhoneNumberInputValidator = String? Function(PhoneNumber? phoneNumber);
 
@@ -7,8 +6,7 @@ class PhoneValidator {
   /// allow to compose several validators
   /// Note that validator list order is important as first
   /// validator failing will return according message.
-  static PhoneNumberInputValidator compose(
-      List<PhoneNumberInputValidator> validators) {
+  static PhoneNumberInputValidator compose(List<PhoneNumberInputValidator> validators) {
     return (valueCandidate) {
       for (var validator in validators) {
         final validatorResult = validator.call(valueCandidate);
@@ -49,9 +47,7 @@ class PhoneValidator {
     bool allowEmpty = true,
   }) {
     return (PhoneNumber? valueCandidate) {
-      if (valueCandidate != null &&
-          (!allowEmpty || valueCandidate.nsn.isNotEmpty) &&
-          !valueCandidate.validate()) {
+      if (valueCandidate != null && (!allowEmpty || valueCandidate.nsn.isNotEmpty) && !valueCandidate.isValid()) {
         return errorText ?? 'invalidPhoneNumber';
       }
       return null;
@@ -62,7 +58,6 @@ class PhoneValidator {
   static PhoneNumberInputValidator invalidType(
     /// expected phonetype
     PhoneNumberType expectedType, {
-
     /// custom error message
     String? errorText,
 
@@ -78,20 +73,15 @@ class PhoneValidator {
   static PhoneNumberInputValidator validType(
     /// expected phonetype
     PhoneNumberType expectedType, {
-
     /// custom error message
     String? errorText,
 
     /// determine whether a missing value should be reported as invalid
     bool allowEmpty = true,
   }) {
-    final defaultMessage = expectedType == PhoneNumberType.mobile
-        ? 'invalidMobilePhoneNumber'
-        : 'invalidFixedLinePhoneNumber';
+    final defaultMessage = expectedType == PhoneNumberType.mobile ? 'invalidMobilePhoneNumber' : 'invalidFixedLinePhoneNumber';
     return (PhoneNumber? valueCandidate) {
-      if (valueCandidate != null &&
-          (!allowEmpty || valueCandidate.nsn.isNotEmpty) &&
-          !valueCandidate.validate(type: expectedType)) {
+      if (valueCandidate != null && (!allowEmpty || valueCandidate.nsn.isNotEmpty) && !valueCandidate.isValid(type: expectedType)) {
         return errorText ?? defaultMessage;
       }
       return null;
@@ -154,8 +144,7 @@ class PhoneValidator {
   @Deprecated('Use valid country, naming was backward')
   static invalidCountry(
     /// list of valid country isocode
-    List<String> expectedCountries, {
-
+    List<IsoCode> expectedCountries, {
     /// custom error message
     String? errorText,
 
@@ -170,8 +159,7 @@ class PhoneValidator {
 
   static PhoneNumberInputValidator validCountry(
     /// list of valid country isocode
-    List<String> expectedCountries, {
-
+    List<IsoCode> expectedCountries, {
     /// custom error message
     String? errorText,
 
@@ -179,14 +167,12 @@ class PhoneValidator {
     bool allowEmpty = true,
   }) {
     assert(
-      expectedCountries.every((isoCode) => isoCodes.contains(isoCode)),
+      expectedCountries.every((isoCode) => isoCodeConversionMap.keys.contains(isoCode.name)),
       'Each expectedCountries value be valid country isoCode',
     );
 
     return (PhoneNumber? valueCandidate) {
-      if (valueCandidate != null &&
-          (!allowEmpty || valueCandidate.nsn.isNotEmpty) &&
-          !expectedCountries.contains(valueCandidate.isoCode)) {
+      if (valueCandidate != null && (!allowEmpty || valueCandidate.nsn.isNotEmpty) && !expectedCountries.contains(valueCandidate.isoCode)) {
         return errorText ?? 'invalidCountry';
       }
       return null;
